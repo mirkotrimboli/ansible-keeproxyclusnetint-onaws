@@ -1,0 +1,9 @@
+[master]
+testkeeproxy01 ansible_user=centos
+
+[backup]
+testkeeproxy02 ansible_user=centos
+
+[cluster:children]
+master
+backup

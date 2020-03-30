@@ -1,0 +1,127 @@
+---
+- name: Ensure SELinux is set to disabled mode for Centos
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=disabled
+  when: (ansible_facts['distribution'] == "CentOS")
+  tags: prerequisite
+
+- name: Create file aws.sh
+  copy:
+    dest: /etc/profile.d/aws.sh
+    content: |
+      export PATH=$PATH:/usr/local/bin
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+
+- name: Make sure haproxy is stopped and disabled
+  systemd:
+    name: haproxy
+    enabled: no
+    state: stopped
+  tags: prerequisite
+
+- name: Make sure keepalived is stopped and disabled
+  systemd:
+    name: keepalived
+    enabled: no
+    state: stopped
+  tags: prerequisite
+
+- name: Create file failover.sh
+  become: true
+  template:
+    src: failover.j2
+    dest: /etc/keepalived/failover.sh
+    owner: root
+    group: root
+    mode: 0700
+  tags: configuration
+
+- name: Create file checkHaproxy.sh
+  become: true
+  template:
+    src: checkHaproxy.j2
+    dest: /etc/keepalived/checkHaproxy.sh
+    owner: root
+    group: root
+    mode: 0700
+  tags: configuration
+
+- name: Create route file for default interface
+  become: true
+  template: 
+    src: routedefault.j2
+    dest: /etc/sysconfig/network-scripts/route-{{ pri_net_int }} 
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_default_route
+
+- name: Create route file for vip interface
+  become: true
+  template: 
+    src: routevip.j2
+    dest: /etc/sysconfig/network-scripts/route-{{ sec_net_int }}
+    owner: root 
+    group: root 
+    mode: 0644
+  register: copy_vip_route
+
+- name: Create rule file for default interface
+  become: true
+  template:
+    src: ruledefault.j2
+    dest: /etc/sysconfig/network-scripts/rule-{{ pri_net_int }}
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_rule_default
+
+- name: Create rule file for vip interface
+  become: true
+  template:
+    src: rulevipdev.j2
+    dest: /etc/sysconfig/network-scripts/rule-{{ sec_net_int }}
+    owner: root
+    group: root
+    mode: 0644
+  register: copy_rule_vip
+
+- name: Create vip interface config file
+  become: true
+  template:
+    src: ifcfg-eth.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-{{ sec_net_int  }}
+    owner: root
+    group: root
+    mode: 0644
+  register: create_config_file_eth  
+
+- name: Insert 100 t1 entry in /etc/iproute2/rt_tables
+  become: true
+  lineinfile:
+    path: /etc/iproute2/rt_tables
+    line: '100 t1'
+
+- name: Insert 101 t2 entry in /etc/iproute2/rt_tables
+  become: true
+  lineinfile:
+    path: /etc/iproute2/rt_tables
+    line: '101 t2'
+
+- name: Copy sysctl parameter
+  become: true
+  template:
+    src: 98-2netaws.conf.j2
+    dest: /etc/sysctl.d/98-2netaws.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Reloading daemons
+  command: systemctl daemon-reload
+  tags: prerequisite

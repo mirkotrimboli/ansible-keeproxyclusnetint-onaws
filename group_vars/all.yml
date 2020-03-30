@@ -1,0 +1,10 @@
+hostcentos1: testkeeproxy01
+hostcentos2: testkeeproxy02
+ipcentos1: 10.206.210.133
+ipcentos2: 10.206.210.145
+ipvip: 10.206.210.152
+pri_net_int: eth0
+sec_net_int: eth1
+aws_netint_id: eni-0e404ec9eee128f44
+network: 10.206.210.128/27
+gateway: 10.206.210.129
