@@ -4,5 +4,6 @@ NETINT_ISPRESENT=`/usr/sbin/ip a | grep eth1`
 
 while [ -n "$NETINT_ISPRESENT" ]
 do
-      /sbin/ifdown {{ sec_net_int }}
+      /usr/sbin/ifdown {{ sec_net_int }}
+      exit 0
 done
