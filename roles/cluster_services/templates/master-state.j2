@@ -7,9 +7,5 @@ if [ -n "$INTERFACEATTACHID" ]
 then
       /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID
       sleep 10
-      /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-else
-      /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
 fi
-sleep 10
-/usr/sbin/ifup {{ sec_net_int }}
+/usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1 && /usr/sbin/ifup {{ sec_net_int }}
