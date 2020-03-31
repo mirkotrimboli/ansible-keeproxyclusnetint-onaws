@@ -5,7 +5,6 @@ INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-
 
 while [ -n "$INTERFACEATTACHID" ]
 do
-      #/sbin/ifdown {{ sec_net_int }}
-      #/usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
-      exit 0
+      /sbin/ifdown {{ sec_net_int }}
+      /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
 done
