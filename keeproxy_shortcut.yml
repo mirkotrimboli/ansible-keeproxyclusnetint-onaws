@@ -1,0 +1,6 @@
+---
+- hosts: cluster
+  become: yes
+  roles:
+    - { role: cluster_services, tags: [ 'prerequisite' ] }
+    - { role: cluster_start, tags: [ 'start' ] }
