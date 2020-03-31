@@ -51,6 +51,16 @@
     mode: 0700
   tags: configuration
 
+- name: Create file masterstate.sh
+  become: true
+  template:
+    src: master-state.j2
+    dest: /etc/keepalived/masterstate.sh
+    owner: root
+    group: root
+    mode: 0700
+  tags: configuration
+
 - name: Create route file for default interface
   become: true
   template: 
