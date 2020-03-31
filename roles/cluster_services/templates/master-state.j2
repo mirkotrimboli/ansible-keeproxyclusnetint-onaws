@@ -5,22 +5,12 @@ INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-
 
 if [ -n "$INTERFACEATTACHID" ]
 then
-      while [ -n "$INTERFACEATTACHID" ]
-      do
-            /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID
-      done
+      /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID
+      sleep 5
       /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-      while [ -z "$INTERFACEATTACHID" ]
-      do
-            sleep 5
-      done
       sleep 5
 else
       /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-      while [ -z "$INTERFACEATTACHID" ]
-      do
-            sleep 5
-      done
       sleep 5
 fi
 /usr/sbin/ifup {{ sec_net_int }}
