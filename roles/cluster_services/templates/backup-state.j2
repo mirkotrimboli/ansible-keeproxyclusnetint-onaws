@@ -1,10 +1,8 @@
 #!/bin/bash
 
-INSTANCE_ID=`ec2metadata --instance-id`
-INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-interface-ids {{ aws_netint_id }} |grep AttachmentId |awk '{print $2}'|/bin/rev|/bin/cut -c 2-|/bin/rev|cut -d '"' -f 2`
+NETINT_ISPRESENT=`/usr/sbin/ip a | grep eth1`
 
-while [ -n "$INTERFACEATTACHID" ]
+while [ -n "$NETINT_ISPRESENT" ]
 do
       /sbin/ifdown {{ sec_net_int }}
-      /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
 done
