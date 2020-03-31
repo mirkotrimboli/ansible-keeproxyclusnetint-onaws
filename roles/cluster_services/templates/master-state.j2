@@ -7,7 +7,7 @@ if [ -n "$INTERFACEATTACHID" ]
 then
       while [ -n "$INTERFACEATTACHID" ]
       do
-            /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
+            /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID
       done
       /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
       while [ -z "$INTERFACEATTACHID" ]
