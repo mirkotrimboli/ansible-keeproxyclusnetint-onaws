@@ -6,5 +6,8 @@ INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-
 while [ -z "$INTERFACEATTACHID" ]
 do
       /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-      /sbin/ifup {{ sec_net_int }}
+      while [ -z "$INTERFACEATTACHID" ]
+      do
+            /sbin/ifup {{ sec_net_int }}
+      done
 done
