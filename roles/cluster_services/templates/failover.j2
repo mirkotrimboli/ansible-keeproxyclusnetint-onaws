@@ -8,10 +8,10 @@ case $STATE in
     "MASTER") /etc/keepalived/masterstate.sh
         exit 0
         ;;
-    "BACKUP") /sbin/ifdown {{ sec_net_int }} ; /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
+    "BACKUP") /etc/keepalived/backupstate.sh
         exit 0
         ;;
-    "FAULT")  /sbin/ifdown {{ sec_net_int }} ; /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
+    "FAULT")  /etc/keepalived/backupstate.sh
         exit 0
         ;;
     *)        echo "unknown state"

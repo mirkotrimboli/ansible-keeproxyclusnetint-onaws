@@ -61,6 +61,16 @@
     mode: 0700
   tags: configuration
 
+- name: Create file backupstate.sh
+  become: true
+  template:
+    src: backup-state.j2
+    dest: /etc/keepalived/backupstate.sh
+    owner: root
+    group: root
+    mode: 0700
+  tags: configuration
+
 - name: Create route file for default interface
   become: true
   template: 

@@ -3,10 +3,9 @@
 INSTANCE_ID=`ec2metadata --instance-id`
 INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-interface-ids {{ aws_netint_id }} |grep AttachmentId |awk '{print $2}'|/bin/rev|/bin/cut -c 2-|/bin/rev|cut -d '"' -f 2`
 
-while [ -z "$INTERFACEATTACHID" ]
+while [ -n "$INTERFACEATTACHID" ]
 do
-      #/usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
+      #/sbin/ifdown {{ sec_net_int }}
+      #/usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID`
       exit 0
 done
-
-#/sbin/ifup {{ sec_net_int }}
