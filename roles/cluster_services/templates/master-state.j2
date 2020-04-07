@@ -21,7 +21,7 @@ while [ -n "$INTERFACEATTACHID" ]
 do
       sleep 1
 done
-attach &
+attach
 }
 
 function checkattach()
@@ -30,18 +30,18 @@ while [ -z "$INTERFACEATTACHID" ]
 do
       sleep 1
 done
-/usr/sbin/ifup eth1
+sleep 10
 }
 
 if [ -n "$INTERFACEATTACHID" ]
 then
       detach &
       b=$!
-      wait $b && `checkdetach &` || `attach &`
-      b=$!
-      wait $b && checkattach || /usr/sbin/ifup eth1
+      wait $b && checkdetach || attach
+      checkattach
 else
       attach &
       b=$!
-      wait $b && checkattach || /usr/sbin/ifup eth1
+      wait $b && checkattach || sleep 10
 fi
+/usr/sbin/ifup eth1
