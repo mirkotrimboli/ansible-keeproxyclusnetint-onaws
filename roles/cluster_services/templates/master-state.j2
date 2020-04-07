@@ -40,4 +40,8 @@ then
       wait $b && `checkdetach &` || `attach &`
       b=$!
       wait $b && checkattach || /usr/sbin/ifup eth1
+else
+      attach &
+      b=$!
+      wait $b && checkattach || /usr/sbin/ifup eth1
 fi
