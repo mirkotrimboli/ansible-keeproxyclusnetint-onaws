@@ -37,7 +37,7 @@ if [ -n "$INTERFACEATTACHID" ]
 then
       detach &
       b=$!
-      wait $b && checkdetach & || attach &
+      wait $b && `checkdetach &` || `attach &`
       b=$!
       wait $b && checkattach || /usr/sbin/ifup eth1
 fi

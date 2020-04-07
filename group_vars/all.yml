@@ -1,6 +1,6 @@
 hostcentos1: testkeeproxy01
 hostcentos2: testkeeproxy02
-ipcentos1: 10.206.210.138
+ipcentos1: 10.206.210.154
 ipcentos2: 10.206.210.145
 ipvip: 10.206.210.152
 pri_net_int: eth0
