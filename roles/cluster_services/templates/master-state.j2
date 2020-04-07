@@ -3,24 +3,14 @@
 INSTANCE_ID=`ec2metadata --instance-id`
 INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-interface-ids {{ aws_netint_id }} |grep AttachmentId |awk '{print $2}'|/bin/rev|/bin/cut -c 2-|/bin/rev|cut -d '"' -f 2`
 
-function detach()
-{
-/usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID
-exit 0
-}
-
-function attach()
-{
-/usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-}
-
 function checkdetach()
 {
 while [ -n "$INTERFACEATTACHID" ]
 do
       sleep 1
+      INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-interface-ids {{ aws_netint_id }} |grep AttachmentId |awk '{print $2}'|/bin/rev|/bin/cut -c 2-|/bin/rev|cut -d '"' -f 2`
 done
-attach
+/usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
 }
 
 function checkattach()
@@ -28,18 +18,19 @@ function checkattach()
 while [ -z "$INTERFACEATTACHID" ]
 do
       sleep 1
+      INTERFACEATTACHID=`/usr/local/bin/aws ec2 describe-network-interfaces --network-interface-ids {{ aws_netint_id }} |grep AttachmentId |awk '{print $2}'|/bin/rev|/bin/cut -c 2-|/bin/rev|cut -d '"' -f 2`
 done
 sleep 10
 }
 
 if [ -n "$INTERFACEATTACHID" ]
 then
-      detach &
+      /usr/local/bin/aws ec2 detach-network-interface --attachment-id $INTERFACEATTACHID &
       b=$!
-      wait $b && checkdetach || attach
+      wait $b && checkdetach || /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
       checkattach
 else
-      attach &
+      /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1 &
       b=$!
       wait $b && checkattach || sleep 10
 fi
