@@ -22,4 +22,4 @@ On the Ansible server:
 
 launch the ansible playbook with the command:
 
-* ansible-playbook -i keeproxy.hosts keeproxy.yml --key-file =./key.pem --user = centos
+* ansible-playbook -i keeproxy.hosts keeproxy.yml --key-file =./key.pem
