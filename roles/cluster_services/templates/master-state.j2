@@ -12,7 +12,6 @@ exit 0
 function attach()
 {
 /usr/local/bin/aws ec2 attach-network-interface --instance-id $INSTANCE_ID --network-interface-id {{ aws_netint_id }} --device-index 1
-exit 0
 }
 
 function checkdetach()
