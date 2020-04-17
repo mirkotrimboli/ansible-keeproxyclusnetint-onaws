@@ -34,4 +34,4 @@ else
       b=$!
       wait $b && checkattach || sleep 10
 fi
-/usr/sbin/ifup eth1
+/usr/sbin/ifup {{ sec_net_int }}

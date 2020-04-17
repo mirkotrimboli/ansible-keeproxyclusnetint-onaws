@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NETINT_ISPRESENT=`/usr/sbin/ip a | grep eth1`
+NETINT_ISPRESENT=`/usr/sbin/ip a | grep {{ sec_net_int }}`
 
 while [ -n "$NETINT_ISPRESENT" ]
 do
